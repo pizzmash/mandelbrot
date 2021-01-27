@@ -17,22 +17,38 @@ def check_divergence(x, y):
         next_y = 2 * current_x * current_y + y
         distance = (next_x ** 2 + next_y ** 2) ** 0.5
         if distance > 2.:
-            return n
+            return n, distance
         current_x, current_y = next_x, next_y
-    return -1
+    return -1, None
 
 
 def main():
-    img = np.full((HEIGHT, WIDTH, 3), 255, dtype=np.uint8)
+    min_max = [[float('inf'), float('-inf')] for _ in range(STEPS)]
+    n_divs = np.empty((HEIGHT, WIDTH), dtype=np.int8)
+    distances = np.empty((HEIGHT, WIDTH))
+    img = np.empty((HEIGHT, WIDTH, 3), dtype=np.uint8)
     for h in range(HEIGHT):
         for w in range(WIDTH):
             x = DOMAIN_X / WIDTH * (w * 2 + 1) - DOMAIN_X
             y = DOMAIN_Y / HEIGHT * (h * 2 + 1) - DOMAIN_Y
-            n_div = check_divergence(x, y)
-            if n_div == -1:
+            n_divs[h][w], distances[h][w] = check_divergence(x, y)
+            if n_divs[h][w] == -1:
+                continue
+            if min_max[n_divs[h][w]][0] > distances[h][w]:
+                min_max[n_divs[h][w]][0] = distances[h][w]
+            if min_max[n_divs[h][w]][1] < distances[h][w]:
+                min_max[n_divs[h][w]][1] = distances[h][w]
+                
+    for h in range(HEIGHT):
+        for w in range(WIDTH):
+            if n_divs[h][w] == -1:
                 img[h][w][:] = 0
             else:
-                img[h][w][1] = int(255 / STEPS * n_div)
+                criteria = 255. / STEPS * n_divs[h][w]
+                dis_range = min_max[n_divs[h][w]][1] - min_max[n_divs[h][w]][0]
+                dis = min_max[n_divs[h][w]][1] - distances[h][w]
+                offset = 255. / STEPS * (dis / dis_range)
+                img[h][w][1] = int(criteria + offset)
                 img[h][w][0::2] = 0
 
     cv2.imshow('mandelbrot', img)
