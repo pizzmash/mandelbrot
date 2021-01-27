@@ -2,8 +2,8 @@ import cv2
 import numpy as np
 
 
-HEIGHT = 600
-WIDTH = 800
+HEIGHT = 1200
+WIDTH = 1600
 DOMAIN_Y = 1.5
 DOMAIN_X = 2.
 STEPS = 30
@@ -38,7 +38,7 @@ def main():
                 min_max[n_divs[h][w]][0] = distances[h][w]
             if min_max[n_divs[h][w]][1] < distances[h][w]:
                 min_max[n_divs[h][w]][1] = distances[h][w]
-                
+
     for h in range(HEIGHT):
         for w in range(WIDTH):
             if n_divs[h][w] == -1:
@@ -51,8 +51,7 @@ def main():
                 img[h][w][1] = int(criteria + offset)
                 img[h][w][0::2] = 0
 
-    cv2.imshow('mandelbrot', img)
-    cv2.waitKey(0)
+    cv2.imwrite('mandelbrot.png', img)
 
 
 if __name__ == '__main__':
