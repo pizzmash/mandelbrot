@@ -1,12 +1,13 @@
 import cv2
 import numpy as np
+from tqdm import tqdm
 
 
 HEIGHT = 1200
 WIDTH = 1600
 DOMAIN_Y = 1.5
 DOMAIN_X = 2.
-STEPS = 30
+STEPS = 100
 
 
 def check_divergence(x, y):
@@ -27,7 +28,7 @@ def main():
     n_divs = np.empty((HEIGHT, WIDTH), dtype=np.int8)
     distances = np.empty((HEIGHT, WIDTH))
     img = np.empty((HEIGHT, WIDTH, 3), dtype=np.uint8)
-    for h in range(HEIGHT):
+    for h in tqdm(range(HEIGHT)):
         for w in range(WIDTH):
             x = DOMAIN_X / WIDTH * (w * 2 + 1) - DOMAIN_X
             y = DOMAIN_Y / HEIGHT * (h * 2 + 1) - DOMAIN_Y
@@ -39,7 +40,7 @@ def main():
             if min_max[n_divs[h][w]][1] < distances[h][w]:
                 min_max[n_divs[h][w]][1] = distances[h][w]
 
-    for h in range(HEIGHT):
+    for h in tqdm(range(HEIGHT)):
         for w in range(WIDTH):
             if n_divs[h][w] == -1:
                 img[h][w][:] = 0
