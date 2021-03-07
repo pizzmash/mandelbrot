@@ -13,4 +13,4 @@
 
 ## こんな感じ！
 
-![mandelbrot](./mandelbrot.png)
+![mandelbrot](https://user-images.githubusercontent.com/39112867/110252336-3be54500-7fc8-11eb-9299-cffa73e133c8.png)
